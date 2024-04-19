@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Repository
+metadata:
+ name: my-repo
+ namespace: argocd
+spec:
+ url: https://github.com/Princedoshi/makerble.git
+ usernameSecret:
+    name: git-credentials
+    key: Princedoshi
+ passwordSecret:
+    name: git-credentials
+    key: Johnlennon@1980
