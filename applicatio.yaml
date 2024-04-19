@@ -1,23 +1,22 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: myapp-argo-application
-  namespace: argocd
+ name: myapp-argo-application
+ namespace: argocd
 spec:
-  project: default
-
-  source:
+ project: default
+ source:
     repoURL: https://github.com/Princedoshi/makerble.git
     targetRevision: HEAD
     path: dev
-  destination: 
+ repo:
+    name: git-credentials
+ destination: 
     server: https://kubernetes.default.svc
     namespace: myapp
-
-  syncPolicy:
+ syncPolicy:
     syncOptions:
     - CreateNamespace=true
-
     automated:
       selfHeal: true
       prune: true
