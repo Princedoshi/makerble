@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/Princedoshi/agrocd-config.git
+    repoURL: https://github.com/Princedoshi/makerble.git
     targetRevision: HEAD
     path: dev
   destination: 
