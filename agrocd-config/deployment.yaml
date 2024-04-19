@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-app-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+      tier: web
+  template:
+    metadata:
+      labels:
+        app: my-app
+        tier: web
+    spec:
+      containers:
+      - name: my-app-web
+        image: princedoshi/my-web-app:v1.0
+        ports:
+        - containerPort: 3000
+
+---
+
+# Service for your Ruby on Rails application
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app-web
+spec:
+  selector:
+    app: my-app
+    tier: web
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
+
+---
+
+# StatefulSet for PostgreSQL
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: my-app-db
+spec:
+  serviceName: "my-app-db"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-app
+      tier: db
+  template:
+    metadata:
+      labels:
+        app: my-app
+        tier: db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: myapp_production
+        - name: POSTGRES_USER
+          value: myapp
+        - name: POSTGRES_PASSWORD
+          value: password
+        volumeMounts:
+        - name: postgres-persistent-storage
+          mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-persistent-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi
